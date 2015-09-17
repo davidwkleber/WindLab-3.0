@@ -147,7 +147,14 @@ io.sockets.on('connection', function(socket){
 process.on('interfaceData', function(idata) {
 	console.log('serialListener got interface message '+idata);
 });
-   
+  
+  
+  
+process.on('writeToCom', function(stuff) {
+	console.log('serialListener writeToCom: '+stuff);
+	serialListener.write(stuff);
+});
+
 DIserialPort.on('data', handleDIserialPortData) ;
 
 

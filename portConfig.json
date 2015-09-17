@@ -1,22 +1,22 @@
 {
 	"stepper": {
-		"port": "COM17",
+		"port": "COM13",
 		"baudrate": "250000"
 	},
 	"measurement": {
-		"port": "COM17",
+		"port": "COM13",
 		"baudrate": "250000"
 			},
 	"loadController": {
-		"port": "COM17",
+		"port": "COM13",
 		"baudrate": "250000"
 	},
 	"windSpeed": {
-		"port": "COM17",
+		"port": "COM13",
 		"baudrate": "250000"
 	},
 	"acceleration": {
-		"port": "COM17",
+		"port": "COM13",
 		"baudrate": "250000"
 	}
 
