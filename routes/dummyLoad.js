@@ -1,9 +1,9 @@
 //
 // module for setting Wind Speed of the wind fan
 //
-var DLserialWriter = require('../serialWriter');
+var DIserialWriter = require('../serialWriter');
 
-// DLserialWriter('COM3');
+// DIserialWriter('COM3');
 
 
 var express = require('express');
@@ -48,7 +48,7 @@ console.log('dummyLoad value in post: ', req.param('dummyLoadValue', null));
  
 			console.log('dummyLoad rendered index: '+dummyLoadValue);
 
-	DLserialWriter.write('DL', serialCall);
+	DIserialWriter.write('DL', serialCall);
 	
 			console.log('dummyLoad serialCall done: '+serialCall);
 	res.send('dummy  load post');

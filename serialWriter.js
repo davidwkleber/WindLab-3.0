@@ -151,14 +151,14 @@ serialWriter.write = function( id, value ) {
 			console.log('Blink_results from windSpeed ' + results);
 		});
 	} else if (id === 'PA') {
-		console.log('PAserialWriter.write '+value);
+		console.log('DIserialWriter.write '+value);
 
 		PAserialPort.write(value, function(err, results) {
 			console.log('PitchAngle ' + err);
 			console.log('PitchAngle ' + results);
 		});
 	} else if (id === 'DL') {
-		console.log('DLserialWriter.write '+value);
+		console.log('DIserialWriter.write '+value);
 
 		DLserialPort.write(value, function(err, results) {
 			console.log('loadController ' + err);

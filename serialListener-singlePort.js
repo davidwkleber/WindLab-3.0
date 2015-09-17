@@ -171,47 +171,17 @@ serialListener.write = function( id, value ) {
 			console.log('DI_err ' + err);
 			console.log('DI_results ' + results);
 		});
-		} else	if( id === 'w' ) {
-	// setImmediate(DIserialPort.write(value, function(err, results) {
-			DIserialPort.write(value, function(err, results) {
-
-			console.log('Blink_err ' + err);
-			console.log('Blink_results from windSpeed ' + results);
-		});
-	} else if (id === 'PA') {
-		console.log('DIserialWriter.write '+value);
-
-		DIserialPort.write(value, function(err, results) {
-			console.log('PitchAngle ' + err);
-			console.log('PitchAngle ' + results);
-		});
-	} else if (id === 'DL') {
-		console.log('DIserialWriter.write '+value);
-
-		DIserialPort.write(value, function(err, results) {
-			console.log('loadController ' + err);
-			console.log('loadController ' + results);
-		});
-
 	} else {
 		console.log('bad id '+id);
 	};
 	
-	
 
 };
-
-
-
-
-
-
-// back to the end stuff of SerialListener
 
 function asserting() {
   console.log('asserting');
 	DIserialPort.set({rts:true, dtr:true}, function(err, something) {
-	  console.log('DIserialPort asserted');
+	  console.log('DLserialPort asserted');
 		setTimeout(clear, 250);
 	});
 }
@@ -219,11 +189,11 @@ function asserting() {
 function clear() {
 	console.log('clearing');
 	DIserialPort.set({rts:false, dtr:false}, function(err, something) {
-	  console.log('DIserialPort clear');
+	  console.log('DLserialPort clear');
 		setTimeout(done, 50);
 	});
 }
 
 function done() {
-	console.log("DIserialPort done resetting");
+	console.log("DLserialPort done resetting");
 }

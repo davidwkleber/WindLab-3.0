@@ -2,9 +2,9 @@
 // module for setting Pitch Angle of the wind turbine blades
 //
 
-var PAserialWriter = require('../serialWriter');
+var DIserialWriter = require('../serialWriter');
 
-// PAserialWriter('COM7');
+// DIserialWriter('COM7');
 
 var express = require('express');
 var router = express.Router();
@@ -86,9 +86,9 @@ console.log('serialValue '+serialValue);
 // var setPAValue = 'T3';
 	
 	// this is for the test rig board, y for the yellow light.
-	// PAserialWriter.write('y', spinnerValue + serialListener.delimiter);
+	// DIserialWriter.write('y', spinnerValue + serialListener.delimiter);
 	
-	PAserialWriter.write('PA', setPAValue);
+	DIserialWriter.write('PA', setPAValue);
 	lastPitchAngle = pitchAngleValue;
 	// res.body.PAcurrentAngle = PAcurrentAngle;
 	res.send('pitch angle page');

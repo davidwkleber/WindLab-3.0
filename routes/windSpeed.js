@@ -1,7 +1,7 @@
 //
 // module for setting Wind Speed of the wind fan
 //
-var WSserialWriter = require('../serialWriter');
+var DIserialWriter = require('../serialWriter');
 
 var express = require('express');
 var router = express.Router();
@@ -48,7 +48,7 @@ console.log('windSpeed value in post: ', req.param('windSpeedValue', null));
  
 			console.log('windSpeed rendered index: '+windSpeedValue);
 
-	WSserialWriter.write('w', serialCall);
+	DIserialWriter.write('w', serialCall);
 	
 			console.log('windSpeed serialCall done: '+serialCall);
 res.send('wind speed page');
