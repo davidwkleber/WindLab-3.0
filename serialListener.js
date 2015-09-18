@@ -66,6 +66,7 @@ io.sockets.on('connection', function(socket){
  
    DIserialPort.on("open", function () {
 		console.log('serialListener.DIserialPort.on Open ' + portConfig.measurement.port);
+		socketInit();
 
         sleep(2000, function() {
 		});
@@ -74,7 +75,6 @@ io.sockets.on('connection', function(socket){
 				console.log('DI_results ' + results);
 			});
 
-		socketInit();
 	});
  
  
@@ -82,7 +82,12 @@ io.sockets.on('connection', function(socket){
  var receivedData = '';
  var chunksIn = 0;
  function handleDIserialPortData(data) {
- 
+ console.log('serialListener: got data '+data);
+io.emit('updateData', data);
+
+// io.emit('updateData', returnMeasurementsWithPower(data));
+
+ /*
 		chunksIn = chunksIn+1;
         receivedData += data.toString();
 
@@ -98,23 +103,25 @@ io.sockets.on('connection', function(socket){
 		 }
          // send the incoming data to browser with websockets.
 		if (sendData.length > 0 ) {
-			var measurementsToSend = returnMeasurementsWithPower(sendData);
+		//	var measurementsToSend = returnMeasurementsWithPower(sendData);
 
-console.log('serialListener: got data '+measurementsToSend);
-			 io.emit('updateData', measurementsToSend);
-
+// console.log('serialListener: got data '+measurementsToSend);
+			 // io.emit('updateData', measurementsToSend);
+io.emit('updateData', sendData);
 			sendData = null;
 			receivedData = null;
 			jsonClosed = null;
 			jsonOpened = null;
+			measurementsToSend = null;
 
 		};
+		*/
 	}; 
  
  function returnMeasurementsWithPower( dataIn ) {
 
 			var thisMeasurement = JSON.parse(dataIn);
-			var powerCalculation = thisMeasurement.current * thisMeasurement.voltage / 1000;
+			var powerCalculation = +thisMeasurement.current * +thisMeasurement.voltage / 1000;
 			
  			 var sendJSON = "{\n\t  \"power\": \""+powerCalculation+'\",';
 			// put in the JSON from the serial input next
