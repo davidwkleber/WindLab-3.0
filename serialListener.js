@@ -1,28 +1,11 @@
 
 module.exports = serialListener;
-var windSpeedValue = 0;
-var dummyLoadValue = 1;
-var pitchAngleValue = 1;
 
-
-// var app = require('./app');
 var portConfig = require('./portConfig.json');
 
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort; // localize object constructor
-// var SerialPort = require("serialport").SerialPort
 
-var simpleJson = {
-  "date": "19/5/2015:16:6:66:666",
-  "voltage":     0,
-  "current":    6,
-  "rpm":    0,
-  "power":    0,
-  "timestamp": 3125413672,
-  "windSpeed": 0,
-  "pitchAngle": -10,
-  "dummyLoad": 0
- }
 console.log('ports ' + portConfig.measurement.port);
 
 	DIserialPort = new SerialPort(portConfig.measurement.port, {
@@ -32,6 +15,7 @@ console.log('ports ' + portConfig.measurement.port);
 	}, function (err) {
 		if (err) console.log('Eroror opening measurement  port: ' +  portConfig.measurement.port);
 	});
+
 
 function sleep(time, callback) {
 // serialListener.prototype.sleep(time, callback) {
@@ -48,8 +32,10 @@ var socketServer;
 var socketio = require('socket.io');
 socketServer = socketio.listen(app, true);
 */
-function serialListener()
-{	//
+function serialListener() {
+}
+function socketInit() {
+
 	//
 	//http://www.barryvandam.com/node-js-communicating-with-arduino/ 
 	//copied from the server.js file
@@ -76,35 +62,27 @@ io.sockets.on('connection', function(socket){
   
 
 });
-
+};
  
    DIserialPort.on("open", function () {
 		console.log('serialListener.DIserialPort.on Open ' + portConfig.measurement.port);
 
         sleep(2000, function() {
 		});
-		
-		serialListener.write('DI', 'AA');
+		DIserialPort.write('AA', function(err, results) {
+				console.log('DI_err ' + err);
+				console.log('DI_results ' + results);
+			});
 
-			// serialListener.write('DI', 'AA');
-
-		//asserting();
+		socketInit();
 	});
  
- 
-			
-
-  }; 
  
  var sendData = '';
  var receivedData = '';
  var chunksIn = 0;
  function handleDIserialPortData(data) {
  
- 
-    // DIserialPort.on('data', function(data) {
-	//		console.log('DataInput : '+data);
-
 		chunksIn = chunksIn+1;
         receivedData += data.toString();
 
@@ -120,16 +98,10 @@ io.sockets.on('connection', function(socket){
 		 }
          // send the incoming data to browser with websockets.
 		if (sendData.length > 0 ) {
-			// have to parse the string sendJSON to a JSON object in order to adjust RPM
-			// dataItem = JSON.parse(sendJSON);
-	//		dataItem = JSON.parse(sendData);
-	
-			// adjust RPM due to Arduino issues.
-	//		dataItem.rpm = Math.floor(dataItem.rpm / 1000);
+			var measurementsToSend = returnMeasurementsWithPower(sendData);
 
-			// have to put JSON dataItem back into a string to send properly, why things cannot handle JSON objects???
-	//	 io.emit('updateData', JSON.stringify(dataItem));
-			 io.emit('updateData', sendData);
+console.log('serialListener: got data '+measurementsToSend);
+			 io.emit('updateData', measurementsToSend);
 
 			sendData = null;
 			receivedData = null;
@@ -139,98 +111,33 @@ io.sockets.on('connection', function(socket){
 		};
 	}; 
  
+ function returnMeasurementsWithPower( dataIn ) {
+
+			var thisMeasurement = JSON.parse(dataIn);
+			var powerCalculation = thisMeasurement.current * thisMeasurement.voltage / 1000;
+			
+ 			 var sendJSON = "{\n\t  \"power\": \""+powerCalculation+'\",';
+			// put in the JSON from the serial input next
+			sendJSON += dataIn.substring(1, dataIn.length);
+		return sendJSON;
+}
+
+
+ // get a message from the parent Node Express processes
+ // 
+ //		Used by windSpeed, pitchAngle and dummyLoad to send the values for arduino
+ //
+ //		results in Arduino being sent code and values via serial port
+ //
  process.on('message', function(m) {
-	console.log('serialListener got message '+m);
-	serialListener();
+
+	console.log('on message: '+ m.arduinoCmd+m.value);
+			DIserialPort.write(m.arduinoCmd+m.value, function(err, results) {
+				console.log('DI_err ' + err);
+				console.log('DI_results ' + results);
+			});
+
 });
 
-process.on('interfaceData', function(idata) {
-	console.log('serialListener got interface message '+idata);
-});
-  
-  
-  
-process.on('writeToCom', function(stuff) {
-	console.log('serialListener writeToCom: '+stuff);
-	serialListener.write(stuff);
-});
 
 DIserialPort.on('data', handleDIserialPortData) ;
-
-
-
-serialListener.doSomething = function() {
-	console.log('serialListener.doSomething here');
-};
-
-// function write (id, value) {
-serialListener.write = function( id, value ) {
-	console.log('serialListener write value: '+value);
-
-     sleep(200, function() {
-    }); 
-	
-	console.log('serialListener write value: '+value);
-	if (id === 'DI') {
-		console.log('DIserialListener.write '+value);
-
-		DIserialPort.write(value, function(err, results) {
-			console.log('DI_err ' + err);
-			console.log('DI_results ' + results);
-		});
-		} else	if( id === 'w' ) {
-	// setImmediate(DIserialPort.write(value, function(err, results) {
-			DIserialPort.write(value, function(err, results) {
-
-			console.log('Blink_err ' + err);
-			console.log('Blink_results from windSpeed ' + results);
-		});
-	} else if (id === 'PA') {
-		console.log('DIserialWriter.write '+value);
-
-		DIserialPort.write(value, function(err, results) {
-			console.log('PitchAngle ' + err);
-			console.log('PitchAngle ' + results);
-		});
-	} else if (id === 'DL') {
-		console.log('DIserialWriter.write '+value);
-
-		DIserialPort.write(value, function(err, results) {
-			console.log('loadController ' + err);
-			console.log('loadController ' + results);
-		});
-
-	} else {
-		console.log('bad id '+id);
-	};
-	
-	
-
-};
-
-
-
-
-
-
-// back to the end stuff of SerialListener
-
-function asserting() {
-  console.log('asserting');
-	DIserialPort.set({rts:true, dtr:true}, function(err, something) {
-	  console.log('DIserialPort asserted');
-		setTimeout(clear, 250);
-	});
-}
-
-function clear() {
-	console.log('clearing');
-	DIserialPort.set({rts:false, dtr:false}, function(err, something) {
-	  console.log('DIserialPort clear');
-		setTimeout(done, 50);
-	});
-}
-
-function done() {
-	console.log("DIserialPort done resetting");
-}

@@ -114,41 +114,55 @@ WSinstance.currentFrame = WSframeToPlay;
 				
 				  $(".WSinitButton-checkbox").prop("checked", "on")
 					mouseIsDown = "false";
-		//									console.log('mouseIsDown = false ');
-
-                //    WSinstance.stop();
-					event.preventDefault();
+					
 					WScurrentValue = (WSinstance.currentFrame/WSnumFrames)*100;
 
 		//			console.log('client windSpeed: '+WSinstance.currentFrame);
 		
-					windSpeedValue = WScurrentValue;
 					
-					var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
+						// used for addWind.... not needed now
+						//	windSpeedValue = WScurrentValue;
+						
+					console.log('windSpeedValue: '+windSpeedValue);
 					
 					var valueText = reutrnWindSpeed(WScurrentValue);	
 					valueText =  +(Math.round(valueText +"e+1")+"e-1");
 					
-				
 					$(".WScurrentValue span").text(valueText+" m/s");
+					
+					event.preventDefault();
+					// var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
+					var posting = $.post( '/windSpeed', { windSpeedValue: valueText*10 } );
 					posting.done(function( data ) {
-						console.log('client post done ');
+						console.log('windSpeed client post done: ');
 					})
                 });
 				} else {
 			    WSinstance.$el.on("mouseup", function () {
 					WSmouseIsDown = "false";
-                    WSinstance.stop();
-					event.preventDefault();
-					
-	//				console.log('client pitchAngle: '+PAinstance.currentFrame);
-	
-						windSpeedValue = WScurrentValue;
+				
+				  $(".WSinitButton-checkbox").prop("checked", "on")
 
-					var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
+                //    WSinstance.stop();
+					WScurrentValue = (WSinstance.currentFrame/WSnumFrames)*100;
+
+		//			console.log('client windSpeed: '+WSinstance.currentFrame);
+		
+					
+						// used for addWind.... not needed now
+						//	windSpeedValue = WScurrentValue;					
+					
+					var valueText = reutrnWindSpeed(WScurrentValue);	
+					valueText =  +(Math.round(valueText +"e+1")+"e-1");
+					
+					$(".WScurrentValue span").text(valueText+" m/s");
+					
+					event.preventDefault();
+					// var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
+					var posting = $.post( '/windSpeed', { windSpeedValue: valueText*10 } );
 					posting.done(function( data ) {
-	//					console.log('client windSpeed post done ');
-					});
+						console.log('windSpeed client post done: ');
+					})
                 });
 				}
             WSinstance.$dispatcher.on(SpriteClip.Event.ENTER_FRAME, function (e, clip) {
@@ -183,11 +197,13 @@ WSinstance.currentFrame = WSframeToPlay;
 					WScurrentValue = (WSinstance.currentFrame/WSnumFrames)*100;
 					
 					event.preventDefault();
-										windSpeedValue = WScurrentValue;
-
-					var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
-										
+					
+						// used for addWind.... not needed now
+						//	windSpeedValue = WScurrentValue;
 					var valueText = reutrnWindSpeed(WScurrentValue);	
+
+					var posting = $.post( '/windSpeed', { windSpeedValue: valueText*10 } );
+										
 
 					$(".WScurrentValue span").text(valueText+" m/s");
                     $(".WScurrentFrame span").text(WSinstance.currentFrame);
@@ -211,11 +227,12 @@ WSinstance.currentFrame = WSframeToPlay;
 
 			//		console.log('client windSpeed BUTTON: '+WSinstance.currentFrame);
 			event.preventDefault();
-								windSpeedValue = WScurrentValue;
-
-					var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
+					
+						// used for addWind.... not needed now
+						//	windSpeedValue = WScurrentValue;
 										
 					var valueText = reutrnWindSpeed(WScurrentValue);	
+					var posting = $.post( '/windSpeed', { windSpeedValue: valueText*10 } );
 
 					
 					$(".WScurrentValue span").text(valueText+" m/s");
@@ -237,12 +254,13 @@ WSinstance.currentFrame = WSframeToPlay;
 				WScurrentValue = WSsaveValue;
 				console.log("save "+WScurrentValue);
 				WSinstance.currentFrame = (WScurrentValue/100)*WSnumFrames;
-					windSpeedValue = WScurrentValue;
-
-					var posting = $.post( '/windSpeed', { windSpeedValue: WScurrentValue } );
+					
+						// used for addWind.... not needed now
+						//	windSpeedValue = WScurrentValue;
 					
 					var WSvalueText = reutrnWindSpeed(WScurrentValue);	
-					
+					var posting = $.post( '/windSpeed', { windSpeedValue: WSvalueText*10 } );
+
 					WSinstance.gotoAndStop(WSinstance.currentFrame);							
 					$(".WScurrentValue span").text(WSvalueText+"m/s");
                     $(".WScurrentFrame span").text(WSinstance.currentFrame);
@@ -251,8 +269,10 @@ WSinstance.currentFrame = WSframeToPlay;
 	//				console.log("INIT ON");
 				WSsaveValue = WScurrentValue;
 	console.log("save "+WScurrentValue);
-						windSpeedValue = WScurrentValue;
-
+					
+						// used for addWind.... not needed now
+						//	windSpeedValue = WScurrentValue;
+						
 					var posting = $.post( '/windSpeed', { windSpeedValue: 0 } );
 					
 					WSinstance.currentFrame = 1;
@@ -274,14 +294,7 @@ function fixPageXY(e) {
   }
 }
 
-function reutrnWindSpeed( windSpeedValueIn ) {
-		var windSpeedValueText = (windSpeedValueIn*0.1456)-0.5523;
-		windSpeedValueText =  +(Math.round(windSpeedValueText +"e+1")+"e-1");
-		if ( windSpeedValueText < 0 ) {
-			windSpeedValueText = 0;
-		}		
-		return windSpeedValueText;
-}		
+
         </script>
  </form>
 	</div>

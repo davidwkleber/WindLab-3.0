@@ -115,8 +115,10 @@
 			
 	
 		function handlePowerCurveData(dataInFromStream) {
-				dataIn = addWindPitchCurrentToData(dataInFromStream);
-
+				// not needed now that measurements return this data
+				// dataIn = addWindPitchCurrentToData(dataInFromStream);
+				dataIn = dataInFromStream;
+				
 				// add the client based data to the data object
 				// dataIn = addWindPitchCurrentToData(dataInFromStream)
 					// save the new JSON data to a buffer

@@ -12,7 +12,6 @@ function returnPitchAngle( pitchAngleIn ) {
 };
 
 function returnDummyLoad( dummyLoadIn ) {
-	var dummyLoadValueText = ((dummyLoadValue-1)/201)*100;
-		dummyLoadValueText =  +(Math.round(dummyLoadValueText +"e+1")+"e-1");
+	var dummyLoadValueText = (dummyLoadIn-1)*0.5;
 	return dummyLoadValueText;
 };

@@ -1,10 +1,6 @@
 //
 // module for setting Wind Speed of the wind fan
 //
-var serialListener = require('../serialListener');
-
-// DIserialWriter('COM3');
-
 
 var express = require('express');
 var router = express.Router();
@@ -34,23 +30,13 @@ console.log('dummyLoad value in post: ', req.param('dummyLoadValue', null));
 	var serialCallValue = Math.floor((dummyLoadValue-1)*5);
 	
 		console.log(' rounded dummy load: '+serialCallValue);
-	if( serialCallValue < 0 ) {
-		serialCallValue = 0;
-	} else if ( serialCallValue > 1000 ) {
-		serialCallValue = 1000;
-	}
-	console.log('dummyLoad serialCallValue: '+serialCallValue);
 
-	var serialCall = 'I' + serialCallValue + '\n';
-
-		console.log('dummyLoad serialCall: '+serialCall);
+		console.log('dummyLoad serialCall: '+serialCallValue);
 	//	res.render('index', {title: 'Dummy Load', seeValue: dummyLoadValue });
  
 			console.log('dummyLoad rendered index: '+dummyLoadValue);
-
-	serialListener.write('DL', serialCall);
-	
-			console.log('dummyLoad serialCall done: '+serialCall);
+		serialListener.send( { arduinoCmd: 'II', value: serialCallValue } );		
+			console.log('dummyLoad serialCall done: '+serialCallValue);
 	res.send('dummy  load post');
 
    

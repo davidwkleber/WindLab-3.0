@@ -5,17 +5,22 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+function sleep(time, callback) {
+// serialListener.prototype.sleep(time, callback) {
+    var stop = new Date().getTime();
+    while(new Date().getTime() < stop + time) {
+        ;
+    }
+    callback();
+};
 
 serialListener = require('child_process').fork(__dirname+'/serialListener.js');
-// var serialWriter = require('./serialWriter');
-// serialWriter();
-
-serialListener.on('message', function(m) {
-	console.log('app got message: '+ m);
-});
+// serialListener.serialListener();
 
 
-serialListener.send('message');
+     sleep(2000, function() {
+		});
+serialListener.send({ arduinoCmd: 'AA', value: '' });
 
  dataFrameContent = 'tourFrame';
  // dataFrameContent = 'lineGraph';

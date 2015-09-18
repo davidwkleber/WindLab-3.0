@@ -2,16 +2,10 @@
 // module for setting Pitch Angle of the wind turbine blades
 //
 
-var serialListener = require('../serialListener');
-
-// DIserialWriter('COM7');
-
 var express = require('express');
 var router = express.Router();
 
 pitchAngleValue = 1;
-
-var lastPitchAngle = '0';
 
 // middleware specific to this route, logs timestamps
 router.use(function timeLog(req, res, next){
@@ -42,56 +36,20 @@ console.log('pitchAngle post');
 	
 		console.log('pitchAngleValue param in PA.js '+ req.param('pitchAngleValue', null));
 		console.log('pitchAngleValue value  in PA.js '+ pitchAngleValue);
-			console.log('? by Pitch Angle '+pitchAngleValue);
-		console.log('? by last Pitch Angle '+lastPitchAngle);
 
 	if (pitchAngleValue == "down" ) {
-			forwardOrBack = 'F';
-			serialValue = Math.floor(1000);
-			pitchAngleValue = 0;
+			forwardOrBack = 'P';
+			pitchAngleValue = '';
 	} else if ( pitchAngleValue == "up" ) {
-			forwardOrBack = 'B';
-			serialValue = Math.floor(1000);
-			pitchAngleValue = 0;
-	} else 
-	if ( +pitchAngleValue < +lastPitchAngle ) {
-					console.log('F by Pitch Angle '+pitchAngleValue);
-		console.log('F by last Pitch Angle '+lastPitchAngle);
-		diffAngle = Math.abs(lastPitchAngle - pitchAngleValue);
-		forwardOrBack = 'F';
-		console.log('F by '+diffAngle);
-		serialValue = Math.floor(diffAngle * 13.3);
-
+			forwardOrBack = 'M';
+			pitchAngleValue = '';
 	} else {
-		forwardOrBack = 'B';
-		diffAngle = Math.abs(pitchAngleValue-lastPitchAngle);
-				console.log('B by Pitch Angle '+pitchAngleValue);
-		console.log('B by last Pitch Angle '+lastPitchAngle);
-
-		//diffAngle = lastPitchAngle - pitchAngleValue;;
-		console.log('B by '+diffAngle);
-		serialValue = Math.floor(diffAngle * 13.3);
+			forwardOrBack = 'A';
+			pitchAngleValue *= 10;
 	}
-	
-	console.log('lastPitchAngle in PA.js '+lastPitchAngle);
-	console.log('pitchAngleValue in PA.js '+pitchAngleValue);
-	console.log('diff angle: '+diffAngle);
-	console.log('Set the value to in PA.js '+serialValue);
-console.log('serialValue '+serialValue);
-	// This is for the real wind tower
-	var setPAValue = forwardOrBack+serialValue;
-		
+		serialListener.send( { arduinoCmd: 'P'+forwardOrBack, value: pitchAngleValue } );		
 
-	// test the Pitch Control, 3 times.
-// var setPAValue = 'T3';
 	
-	// this is for the test rig board, y for the yellow light.
-	// DIserialWriter.write('y', spinnerValue + serialListener.delimiter);
-	
-	serialListener.write('PA', setPAValue);
-	
-	lastPitchAngle = pitchAngleValue;
-	// res.body.PAcurrentAngle = PAcurrentAngle;
 	res.send('pitch angle page');
 })
 

@@ -1,5 +1,9 @@
 
-
+//
+// This is the mechanism for saving data to a file
+//
+//	Used by ??
+//
 
 
 		var recordDataItem;
@@ -17,7 +21,14 @@
 	
 						if( recordDataFlag) {
 			//					console.log("add: dataIn"+dataIn);
-				data = addWindPitchCurrentToData(dataIn);
+			
+							// not used now that measurement data has this information 
+							//
+							// data = addWindPitchCurrentToData(dataIn);
+							//
+							// set this instead
+							var data = dataIn;
+					
 			// console.log("add: data" +data);
 							recordDataItem = JSON.parse(data);
 						// 	console.log('record updateData.power  ' + recordDataItem.power);
