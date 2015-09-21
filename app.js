@@ -18,9 +18,9 @@ serialListener = require('child_process').fork(__dirname+'/serialListener.js');
 // serialListener.serialListener();
 
 
-     sleep(2000, function() {
-		});
-serialListener.send({ arduinoCmd: 'AA', value: '' });
+//    sleep(2000, function() {
+//		});
+// serialListener.send({ arduinoCmd: 'AA', value: '' });
 
  dataFrameContent = 'tourFrame';
  // dataFrameContent = 'lineGraph';

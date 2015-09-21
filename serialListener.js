@@ -8,6 +8,8 @@ module.exports = serialListener;
 //	The incomming data is passed onto the web client via web sockets.
 //
 
+var firstData = true;
+
 var portConfig = require('./portConfig.json');
 
 var serialport = require("serialport");
@@ -17,7 +19,6 @@ console.log('ports ' + portConfig.measurement.port);
 
 	DIserialPort = new SerialPort(portConfig.measurement.port, {
 		baudrate: portConfig.measurement.baudrate,
-		
 		parser: serialport.parsers.readline("EOL"),
 	}, function (err) {
 		if (err) console.log('Eroror opening measurement  port: ' +  portConfig.measurement.port);
@@ -75,12 +76,11 @@ io.sockets.on('connection', function(socket){
 		console.log('serialListener.DIserialPort.on Open ' + portConfig.measurement.port);
 		socketInit();
 
-        sleep(2000, function() {
-		});
-		DIserialPort.write('AA', function(err, results) {
-				console.log('DI_err ' + err);
-				console.log('DI_results ' + results);
-			});
+      //  sleep(2000, function() {
+		// });
+		setTimeout(stopDataFlow, 2000);
+
+
 
 	});
  
@@ -88,13 +88,24 @@ io.sockets.on('connection', function(socket){
  var sendData = '';
  var receivedData = '';
  var chunksIn = 0;
+ 
+ 
  function handleDIserialPortData(data) {
- console.log('serialListener: got data '+data);
-io.emit('updateData', data);
+	// drop the first packet that comes out the Arduino
+	if( firstData == false ) {
+ // console.log('serialListener: got data '+data);
 
-// io.emit('updateData', returnMeasurementsWithPower(data));
+ // Emit the data without any processing at all, no power added, no checking for a complete JSON package.
+ // io.emit('updateData', data);
+
+ // Emit the data after adding the Power 
+	var jsonWithPower = returnMeasurementsWithPower(data);
+//	 console.log('serialListener: send data '+jsonWithPower);
+	io.emit('updateData', jsonWithPower);
 
  /*
+	// parse the incomming COM data and 'extract' one complete JSON object from it
+	//
 		chunksIn = chunksIn+1;
         receivedData += data.toString();
 
@@ -123,6 +134,12 @@ io.emit('updateData', sendData);
 
 		};
 		*/
+		
+		} else {
+			console.log('serialListener: got FIRST data '+data);
+			firstData = false;
+		}
+		data = null;
 	}; 
  
  function returnMeasurementsWithPower( dataIn ) {
@@ -130,9 +147,9 @@ io.emit('updateData', sendData);
 			var thisMeasurement = JSON.parse(dataIn);
 			var powerCalculation = +thisMeasurement.current * +thisMeasurement.voltage / 1000;
 			
- 			 var sendJSON = "{\n\t  \"power\": \""+powerCalculation+'\",';
+ 			 var sendJSON = "\n{\n\t  \"power\": \""+powerCalculation+'\",';
 			// put in the JSON from the serial input next
-			sendJSON += dataIn.substring(1, dataIn.length);
+			sendJSON += dataIn.substring(3, dataIn.length);
 		return sendJSON;
 }
 
@@ -155,3 +172,50 @@ io.emit('updateData', sendData);
 
 
 DIserialPort.on('data', handleDIserialPortData) ;
+
+
+// an attempt to set dtr and rts
+// but the serialPort.set command is not known
+//	this despite the fact that the code came from a github example...
+function setupComPort() {
+  console.log('setupComPort');
+    //NOTE: you actually de-assert rts and dtr to toggle!
+    DIserialPort.set({rts:true, dtr:true}, function(err, something) {
+      console.log('Com Port Setup');
+        setTimeout(startDataFlow, 5000);
+    });
+}
+
+//
+//	initialize the data flow, 
+//		Sending a stop does not really fix anything, but hey good try.
+//
+//		after sending the stop, it waits and sends a start
+function stopDataFlow() {
+		firstData = true;
+		  console.log('stopDataFlow');
+
+		DIserialPort.write('ST', function(err, results) {
+				console.log('return from ST');
+				console.log('DI_err ' + err);
+				console.log('DI_results ' + results);
+			});
+		setTimeout(startDataFlow, 2000);
+
+}
+
+//
+//	Starrt the data flow 
+//	send the Arduino WebShield an AA 
+//	
+//		first data packet is dumped for good measure.
+function startDataFlow() {
+		  console.log('startDataFlow');
+
+		firstData = true;
+		DIserialPort.write('AA', function(err, results) {
+				console.log('return from AA');
+				console.log('DI_err ' + err);
+				console.log('DI_results ' + results);
+			});
+}

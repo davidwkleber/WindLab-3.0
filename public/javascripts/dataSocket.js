@@ -19,6 +19,9 @@
 					console.log('dataSocket client connected ');
 			});
 			
+			
+			// This was built for a try at processing or averaging data
+			// NOT used at this time.
 			var measurementData_limit = 500;
 			var measurementData = [];
 			

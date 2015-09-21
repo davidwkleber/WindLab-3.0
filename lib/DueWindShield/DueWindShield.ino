@@ -36,7 +36,7 @@ For Arduino Due, datatype int is the same size as long: -2.147.483.648 to 2.147.
 boolean DEBUG=false;
 //uint32_t LED_PIN = 13;
 String version ="Due 0.0.1alpha";
-const long buad = 115200;
+const long buad = 250000;
 int32_t Number;
 uint16_t Load;
 uint16_t WindSpeed=0;
