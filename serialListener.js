@@ -1,6 +1,13 @@
 
 module.exports = serialListener;
 
+// serialListener
+//
+//	This is the module which handles communication between the Arduino Serial Port
+//	Data is written to and read from the COM port via the node package serialport
+//	The incomming data is passed onto the web client via web sockets.
+//
+
 var portConfig = require('./portConfig.json');
 
 var serialport = require("serialport");
