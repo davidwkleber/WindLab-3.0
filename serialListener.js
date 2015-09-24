@@ -93,14 +93,14 @@ io.sockets.on('connection', function(socket){
  function handleDIserialPortData(data) {
 	// drop the first packet that comes out the Arduino
 	if( firstData == false ) {
- // console.log('serialListener: got data '+data);
+  // console.log('serialListener: got data '+data);
 
  // Emit the data without any processing at all, no power added, no checking for a complete JSON package.
  // io.emit('updateData', data);
 
  // Emit the data after adding the Power 
 	var jsonWithPower = returnMeasurementsWithPower(data);
-//	 console.log('serialListener: send data '+jsonWithPower);
+	 console.log('serialListener: send data '+jsonWithPower);
 	io.emit('updateData', jsonWithPower);
 
  /*
@@ -138,6 +138,7 @@ io.emit('updateData', sendData);
 		} else {
 			console.log('serialListener: got FIRST data '+data);
 			firstData = false;
+			//serialport.flush(); // added by Maik, should empty old data in serial buffer !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		}
 		data = null;
 	}; 

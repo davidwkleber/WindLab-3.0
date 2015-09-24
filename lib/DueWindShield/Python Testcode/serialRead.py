@@ -6,14 +6,15 @@ import serial,json,time,csv,sys
 
 
 # ser = serial.Serial(
-	# port = 'COM28',
-	# baudrate = 115200, 
-	# parity = serial.PARITY_NONE,
-	# stopbits = serial.STOPBITS_ONE,
-	# bytesize = serial.EIGHTBITS
-	# )
-	
-ser = serial.Serial('COM28',250000)
+    # port = 'COM28',
+    # baudrate = 115200, 
+    # parity = serial.PARITY_NONE,
+    # stopbits = serial.STOPBITS_ONE,
+    # bytesize = serial.EIGHTBITS
+    # )
+    
+ser = serial.Serial('COM19',250000)
+record_minutes=60 #minutes
 
 message=''
 
@@ -23,7 +24,7 @@ timestamp=0
 diff_last=0
 timestamp_start=0;
 
-ser.write(b'NI')
+#ser.write(b'NI')
 time.sleep(2.0)
 ser.write(b'AA')
 
@@ -62,13 +63,13 @@ def readlineCR(port):
 
 def validate_json(text):
     try:
-        if text.__contains__('timestamp') & text.__contains__('voltage') &text.__contains__('current')&text.__contains__('windspeed') &text.__contains__('pitch') &text.__contains__('rpm') &text.__contains__('temperatur') &text.__contains__('preaaue_amb') &text.__contains__('humidity') &text.__contains__('g_x') &text.__contains__('g_y') &text.__contains__('g_z') &text.__contains__('dummy_a') &text.__contains__('dummy_b') &text.__contains__('dummy_c') &text.__contains__('dummy_d') &text.__contains__('dummy_e'):
-            return True
+        if text.__contains__('timestamp') & text.__contains__('voltage') &text.__contains__('current')&text.__contains__('windSpeed') &text.__contains__('pitchAngle') &text.__contains__('rpm') &text.__contains__('temperature') &text.__contains__('ambientPressure') &text.__contains__('humidity') &text.__contains__('accelerationX') &text.__contains__('accelerationY') &text.__contains__('accelerationZ') &text.__contains__('currentSink'):
+            return True #&text.__contains__('dummy_a') &text.__contains__('dummy_b') &text.__contains__('dummy_c') &text.__contains__('dummy_d') &text.__contains__('dummy_e')
     except:
         return False
 with open ('data/Data.csv','w', newline='') as csvfile:
     print(time.strftime('%X %x'))
-    fieldnames=['timestamp','voltage','current','windspeed','pitch','rpm','temperature','pressure_amb','humidity','g_x','g_y','g_z','dummy_a','dummy_b','dummy_c','dummy_d','dummy_e']
+    fieldnames=['timestamp','voltage','current','windSpeed','pitchAngle','rpm','temperature','ambientPressure','humidity','accelerationX','accelerationY','accelerationZ','currentSink'] #,'dummy_a','dummy_b','dummy_c','dummy_d','dummy_e'
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames,dialect='excel-tab')
     writer.writeheader()
     while ser.isOpen():
@@ -81,13 +82,15 @@ with open ('data/Data.csv','w', newline='') as csvfile:
         message = readlineCR(ser)
         # print('Message: {0}'.format(message))
         # print('count open: {0} count close: {1}'.format(message.count('{'),message.count('}')))
-        # print(message)
+        #print(message)
         if message.count('{')==1 & message.count('}')==1 :
             try:
-                text= json.loads(message)
+                text = json.loads(message)
                 # print(text)
+                #print(text['timestamp'])
                 if validate_json(text):
                     if timestamp==0:
+                        # print(text['timestamp'])
                         timestamp=int(text['timestamp'])
                         timestamp_start=timestamp
                     else:
@@ -96,6 +99,7 @@ with open ('data/Data.csv','w', newline='') as csvfile:
                     if timestamp>0:             #2*60*1000000:
                         writer.writerow(text)
                 else:
+                    # print("no JSON")
                     message=''
                     # timestamp=0
                     ser.flushOutput()
@@ -111,8 +115,9 @@ with open ('data/Data.csv','w', newline='') as csvfile:
             message=''
             # timestamp=0
             ser.flushOutput()
+        #print(timestamp-timestamp_start)
         
-        if (timestamp-timestamp_start)>1*60*1000000:# 1 minutes
+        if (timestamp-timestamp_start)>record_minutes*60*1000000:# 1 minutes
             print(time.strftime('%X %x'))
             ser.write(b'S')
             sys.exit()

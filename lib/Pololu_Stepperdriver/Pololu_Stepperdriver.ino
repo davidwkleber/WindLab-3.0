@@ -6,7 +6,10 @@ const int	M0		=	5;
 const int	M1		=	6;
 const int	M2		=	7;
 
-unsigned long Msteps=1;
+const int SLP		=	3;
+const int RST		=	4;
+
+unsigned long Msteps=2;
 String inputString="";
 long Number;
 long baud = 115200;
@@ -70,7 +73,7 @@ void Enable(bool activate){
 }
 
 boolean setStep(unsigned long Steps, boolean direction){
-	Steps=Steps+1;
+	Steps=Steps;
 	Enable(true);
 
 	if (direction)
@@ -84,9 +87,9 @@ boolean setStep(unsigned long Steps, boolean direction){
 	}
 	do{
 		digitalWrite(STEP,HIGH);
-		delayMicroseconds(400);
-		digitalWrite(STEP,LOW);
 		delayMicroseconds(200);
+		digitalWrite(STEP,LOW);
+		delayMicroseconds(100);
 		//Serial.println(Steps);
 		Steps--;
 	}while(Steps);
@@ -105,7 +108,7 @@ void backward(unsigned long TotalSteps)
 
 void forward(unsigned long TotalSteps)
 {
-	Serial.print("Backward Steps: ");
+	Serial.print("Forward Steps: ");
 	Serial.println(TotalSteps);
 	setStep(TotalSteps, false);
 	
@@ -114,11 +117,11 @@ void forward(unsigned long TotalSteps)
 void testfunktion1(long steps)
 {
 	//Msteps=1;
-	Serial.println(Msteps);
+	Serial.println(steps);
 	setMicrostep(Msteps);
-	setStep(8000*Msteps,true);	//one round 200 full steps
+	setStep(6000*Msteps,true);	//one round 200 full steps
 	//delay(500);
-	setStep(8000*Msteps,false);
+	setStep(6000*Msteps,false);
 }
 
 
@@ -130,6 +133,10 @@ void setup()
 	pinMode(STEP,OUTPUT);
 	pinMode(DIR,OUTPUT);
 	pinMode(En,INPUT_PULLUP);
+	pinMode(SLP,OUTPUT);
+	digitalWrite(SLP,HIGH);
+	pinMode(RST,OUTPUT);
+	digitalWrite(RST,HIGH);
 	Serial.begin(baud);
 	Serial.println("Start Serial Communication for Steppermotor");
 	setMicrostep(Msteps);
@@ -178,7 +185,7 @@ void loop()
 		{
 			
 			Serial.println(i);
-			testfunktion1(5000);
+			testfunktion1(2000);
 
 		}
 		Serial.println(".");

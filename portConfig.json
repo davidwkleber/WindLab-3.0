@@ -1,6 +1,6 @@
 {
 	"measurement": {
-		"port": "COM6",
+		"port": "COM19",
 		"baudrate": "250000"
 	}
 }
