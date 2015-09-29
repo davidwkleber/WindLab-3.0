@@ -8,8 +8,6 @@ module.exports = serialListener;
 //	The incomming data is passed onto the web client via web sockets.
 //
 
-var firstData = true;
-
 var portConfig = require('./portConfig.json');
 
 var serialport = require("serialport");
@@ -75,6 +73,8 @@ io.sockets.on('connection', function(socket){
    DIserialPort.on("open", function () {
 		console.log('serialListener.DIserialPort.on Open ' + portConfig.measurement.port);
 		socketInit();
+	
+		// serialport.flush(); // added by Maik, should empty old data in serial buffer !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       //  sleep(2000, function() {
 		// });
@@ -88,60 +88,38 @@ io.sockets.on('connection', function(socket){
  var sendData = '';
  var receivedData = '';
  var chunksIn = 0;
+ var PACKAGE_SIZE = 311;
  
- 
+ function checkJson(jsonPackage) {
+	// console.log("checkJson size: "+jsonPackage.length);
+	if( jsonPackage.length === PACKAGE_SIZE )
+		return true;
+	else {
+		console.log("checkJson ERROR: package size Wrong: "+jsonPackage.length);
+		return false;
+	}
+}
+
+
  function handleDIserialPortData(data) {
-	// drop the first packet that comes out the Arduino
-	if( firstData == false ) {
-  // console.log('serialListener: got data '+data);
+	// drop any packate that is not the correct size
+	if( checkJson(data) == true ) {
 
  // Emit the data without any processing at all, no power added, no checking for a complete JSON package.
  // io.emit('updateData', data);
 
  // Emit the data after adding the Power 
-	var jsonWithPower = returnMeasurementsWithPower(data);
-	 console.log('serialListener: send data '+jsonWithPower);
-	io.emit('updateData', jsonWithPower);
+		var jsonWithPower = returnMeasurementsWithPower(data);
+		io.emit('updateData', jsonWithPower);
 
- /*
-	// parse the incomming COM data and 'extract' one complete JSON object from it
-	//
-		chunksIn = chunksIn+1;
-        receivedData += data.toString();
-
-			var jsonOpened = receivedData.indexOf('{');
-			var jsonClosed = receivedData.indexOf('}', jsonOpened);
-
-		if( jsonClosed !== -1 && jsonOpened !== -1 ) {
-			if ( jsonClosed > jsonOpened ) {
-				sendData = receivedData.substring(jsonOpened, jsonClosed+1);
-				receivedData = receivedData.substring(jsonClosed+2, receivedData.length);'';
-				chunksIn = 0;
-			}
-		 }
-         // send the incoming data to browser with websockets.
-		if (sendData.length > 0 ) {
-		//	var measurementsToSend = returnMeasurementsWithPower(sendData);
-
-// console.log('serialListener: got data '+measurementsToSend);
-			 // io.emit('updateData', measurementsToSend);
-io.emit('updateData', sendData);
-			sendData = null;
-			receivedData = null;
-			jsonClosed = null;
-			jsonOpened = null;
-			measurementsToSend = null;
-
-		};
-		*/
+ 
 		
-		} else {
-			console.log('serialListener: got FIRST data '+data);
-			firstData = false;
+	} else {
+		console.log('serialListener: got bad data '+data);
 			//serialport.flush(); // added by Maik, should empty old data in serial buffer !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		}
-		data = null;
-	}; 
+	}
+	data = null;
+}; 
  
  function returnMeasurementsWithPower( dataIn ) {
 
@@ -193,7 +171,6 @@ function setupComPort() {
 //
 //		after sending the stop, it waits and sends a start
 function stopDataFlow() {
-		firstData = true;
 		  console.log('stopDataFlow');
 
 		DIserialPort.write('ST', function(err, results) {
@@ -201,10 +178,15 @@ function stopDataFlow() {
 				console.log('DI_err ' + err);
 				console.log('DI_results ' + results);
 			});
-		setTimeout(startDataFlow, 2000);
+			setTimeout(flushBuffer, 2000);
+		// setTimeout(startDataFlow, 2000);
 
 }
 
+function flushBuffer() {
+	// serialport.flush();
+	setTimeout(startDataFlow, 2000);
+}
 //
 //	Starrt the data flow 
 //	send the Arduino WebShield an AA 
@@ -213,7 +195,6 @@ function stopDataFlow() {
 function startDataFlow() {
 		  console.log('startDataFlow');
 
-		firstData = true;
 		DIserialPort.write('AA', function(err, results) {
 				console.log('return from AA');
 				console.log('DI_err ' + err);

@@ -1,0 +1,97 @@
+ports COM19
+serialListener.DIserialPort.on Open COM19
+serialListenerInit called 
+App in Dev mode
+serialListener: setup connection now
+stopDataFlow
+return from ST
+DI_err undefined
+DI_results 2
+startDataFlow
+return from AA
+DI_err undefined
+DI_results 2
+checkJson ERROR: package size Wrong: 309
+serialListener: got FIRST data {
+	"voltage":     0,
+	"current":    0,
+	"rpm":        0,
+	"windSpeed":    0,
+	"pitchAngle": -100,
+	"temperature":  230,
+	"ambientPressure": 101300000,
+	"humidity": 1000,
+	"accelerationX":     0,
+	"accelerationY":     0,
+	"accelerationZ":    -1,
+	"currentSink":    0,
+	"timestamp":   18278090
+}
+
+route index get 
+index: dataFrameContent: tourFrame
+Start indeX
+in index: dataFrameContent  tourFrame
+[0mGET / [36m304 [0m16.610 ms - -[0m
+[0mGET /javascripts/windPitchLoadConversionsUtility.js [36m304 [0m4.885 ms - -[0m
+[0mGET /lib/ajax/libs/2.0.3/jquery.js [36m304 [0m4.374 ms - -[0m
+[0mGET /lib/SpriteClip/spriteclip.min.js [36m304 [0m4.055 ms - -[0m
+[0mGET /lib/socket.io/socket.io.js [36m304 [0m4.219 ms - -[0m
+[0mGET /stylesheets/style.css [36m304 [0m1.572 ms - -[0m
+[0mGET /javascripts/dataSocket.js [36m304 [0m1.529 ms - -[0m
+[0mGET /javascripts/guage.js [36m304 [0m2.409 ms - -[0m
+[0mGET /lib/d3js/d3.v3.min.js [36m304 [0m1.270 ms - -[0m
+[0mGET /lib/FileSaver/FileSaver.min.js [36m304 [0m1.396 ms - -[0m
+[0mGET /images/up.png [36m304 [0m0.537 ms - -[0m
+[0mGET /images/down.png [36m304 [0m0.553 ms - -[0m
+[0mGET /images/Background_big.png [36m304 [0m0.444 ms - -[0m
+[0mGET /images/20150208_171x486_160frames_windsack_small.png [36m304 [0m0.429 ms - -[0m
+[0mGET /images/20150208_Pitch_final_small_252x486.png [36m304 [0m1.140 ms - -[0m
+[0mGET /images/20150208_load_small_221x134_201frames.png [36m304 [0m0.358 ms - -[0m
+[0mGET /rightFrame/index.html [36m304 [0m0.612 ms - -[0m
+[0mGET /topFrame/index.html [36m304 [0m0.712 ms - -[0m
+[0mGET /rightFrame/tourFrameStyle.css [36m304 [0m23.330 ms - -[0m
+[0mGET /rightFrame/images/WindLab_Logo.png [36m304 [0m21.224 ms - -[0m
+[0mGET /topFrame/topFrameStyle.css [36m304 [0m17.857 ms - -[0m
+[0mGET /lib/ajax/libs/2.0.3/jquery.min.js [36m304 [0m15.133 ms - -[0m
+[0mGET /lib/socket.io/socket.io.js [36m304 [0m12.963 ms - -[0m
+[0mGET /javascripts/navigation.js [36m304 [0m13.006 ms - -[0m
+[0mGET /topFrame/images/menu/introBig.png [36m304 [0m9.674 ms - -[0m
+[0mGET /topFrame/images/menu/timeActive.png [36m304 [0m11.627 ms - -[0m
+[0mGET /topFrame/images/menu/powerActive.png [36m304 [0m13.253 ms - -[0m
+a user connected
+connected socket: o-y1aNyBGbRzpZQ6AAAA
+checkJson ERROR: package size Wrong: 163
+serialListener: got FIRST data 
+{
+	"voltage":     0,
+	"current":    0,
+	"rpm":        0,
+	"windSpeed":    0,
+	"pitchAngle": -100,
+	"temperature":  230,
+	"ambientPressure": 101482407
+}
+
+windSpeed Time:  1443530491236
+windSpeed post
+windSpeed value in post:  47
+ rounded wind speed: 47
+windSpeed serialCallValue: 47
+windSpeed rendered index: 47
+windSpeed serialCall done: 47
+on message: WS47
+DI_err undefined
+DI_results 4
+[0mPOST /windSpeed [32m200 [0m23.564 ms - 15[0m
+windSpeed Time:  1443530492164
+windSpeed post
+windSpeed value in post:  14
+ rounded wind speed: 14
+windSpeed serialCallValue: 14
+windSpeed rendered index: 14
+windSpeed serialCall done: 14
+on message: WS14
+[0mPOST /windSpeed [32m200 [0m1.232 ms - 15[0m
+DI_err undefined
+DI_results 4

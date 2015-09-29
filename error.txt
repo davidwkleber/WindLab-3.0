@@ -1,0 +1,9 @@
+ports COM19
+serialListener.DIserialPort.on Open COM19
+serialListenerInit called 
+App in Dev mode
+serialListener: setup connection now
+stopDataFlow
+return from ST
+DI_err undefined
+DI_results 2
