@@ -117,8 +117,6 @@
 		function handlePowerCurveData(dataInFromStream) {
 			// dataIn = addWindPitchCurrentToData(dataInFromStream);
 dataIn = dataInFromStream;
-				console.log("dataIn: "+dataIn);
-
 				// add the client based data to the data object
 				// dataIn = addWindPitchCurrentToData(dataInFromStream)
 					// save the new JSON data to a buffer
@@ -139,8 +137,8 @@ dataIn = dataInFromStream;
 				//	dataItem = JSON.parse(dataIn);
 					dataItem = computeMean(inData);
 						dataPoints.push({
-							x: +dataItem.rpm,
-							y: +dataItem.power,
+							x: dataItem.rpm,
+							y: dataItem.power,
 
 						});
 					if (dataPoints.length > limit)
@@ -168,7 +166,7 @@ dataIn = dataInFromStream;
 					
 					meanData.push( {
 						x: dataMeaned.rpm,
-						y: +dataMeaned.power
+						y: dataMeaned.power
 					});
 					meanDataSeries.dataPoints = meanData;
 				//	console.log("in Record: meanDataPoint: "+meanData);
@@ -217,46 +215,6 @@ meanDataSeries.dataPoints = meanData;
 		
 		
 
-		function meanDataData(dataTomeanData) {
-				var sum = [];
-			   var sumPower = 0;
-			   var sumRPM = 0;
-// console.log("dataTomeanData.length "+dataTomeanData.length);
-				for(var i = 0; i < dataTomeanData.length; i++) {
-// console.log("meanData: data to meanData: "+JSON.stringify(dataTomeanData[i]));
-					
-					thisDataItem = JSON.parse(dataTomeanData[i]);
-							sumPower += thisDataItem.power;
-							sumRPM += thisDataItem.rpm;
-
-				};
-				
-				
-				var y = (sumPower / dataTomeanData.length);
-				var x = (sumRPM / dataTomeanData.length);
-
-			meanData.push( {
-				x: x,
-				y: y
-			});
-											// console.log("meanData: meanData data length: "+meanData.length);
-											//console.log("meanData power: "+x);
-											 // console.log("meanData rpm: "+y);
-											// console.log("meanData: meanData data : "+JSON.stringify(meanData));
-
-
-		//	if ( meanData.length > 1 ) {
-		//		meanData.shift();
-		//	}
-			meanDataSeries.dataPoints = meanData;
-		//	console.log("meanData: "+JSON.stringify(meanData));
-						
-		//	console.log("meanDataSeries Line "+JSON.stringify(meanDataSeries));
-		//	console.log("data current point "+JSON.stringify(data));
-
-				
-
-			}
 
 	function computeMean(dataToMean) {
 			var sum = [];
@@ -267,7 +225,7 @@ meanDataSeries.dataPoints = meanData;
 // console.log("meanData: data to mean: "+JSON.stringify(dataToMean[i]));
 					
 					thisMeanDataItem = JSON.parse(dataToMean[i]);
-							sumPower += +thisMeanDataItem.power;
+							sumPower += +hisMeanDataItem.power;
 							sumRPM += +thisMeanDataItem.rpm;
 
 				};

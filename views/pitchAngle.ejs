@@ -228,19 +228,27 @@ PAinstance.gotoAndStop(+PAframeToPlay);
 			
 					
 		$( ".PAinitButton-checkbox" ).on( "click", function() {
+					
 
 	//		console.log("INIT on click");
 				PAinitSelection = $(".PAinitButton-checkbox:checked").val();
 			//	console.log("init on? "+PAinitSelection);
 				if (PAinitSelection == "on") {
-									PAinstance.currentFrame = 1;
+			//		event.preventDefault();
+					var posting = $.post( '/pitchAngle', { pitchAngleValue: "initDone" } );
+									
+					PAinstance.currentFrame = 1;
 					PAcurrentAngle = returnPitchAngle(PAinstance.currentFrame);
 					PAinstance.gotoAndStop(1);							
 					$(".PAcurrentAngle span").text(PAcurrentAngle+"°");
                     $(".PAcurrentFrame span").text(PAinstance.currentFrame);
 				} else {
 	//				console.log("INIT ON");
-
+									
+					PAinstance.currentFrame = 1;
+					PAcurrentAngle = returnPitchAngle(PAinstance.currentFrame);
+					PAinstance.gotoAndStop(1);							
+					$(".PAcurrentAngle span").text("INIT to -10°");
 				}
 		 });
 			

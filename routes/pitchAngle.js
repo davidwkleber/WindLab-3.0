@@ -43,6 +43,9 @@ console.log('pitchAngle post');
 	} else if ( pitchAngleValue == "up" ) {
 			forwardOrBack = 'M';
 			pitchAngleValue = '';
+	} else if ( pitchAngleValue == "initDone" ) {
+			forwardOrBack = '';
+			pitchAngleValue = '0';
 	} else {
 			forwardOrBack = 'A';
 			pitchAngleValue *= 10;

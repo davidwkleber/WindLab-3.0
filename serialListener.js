@@ -112,7 +112,7 @@ io.sockets.on('connection', function(socket){
 		var jsonWithPower = returnMeasurementsWithPower(data);
 		io.emit('updateData', jsonWithPower);
 
- 
+	//	io.emit('updateData', returnMeasurementsWithPower(data));
 		
 	} else {
 		console.log('serialListener: got bad data '+data);
@@ -124,11 +124,25 @@ io.sockets.on('connection', function(socket){
  function returnMeasurementsWithPower( dataIn ) {
 
 			var thisMeasurement = JSON.parse(dataIn);
+			/*
+						thisMeasurement.rpm = +thisMeasurement.rpm / 1000;
 			var powerCalculation = +thisMeasurement.current * +thisMeasurement.voltage / 1000;
 			
  			 var sendJSON = "\n{\n\t  \"power\": \""+powerCalculation+'\",';
 			// put in the JSON from the serial input next
+		
+			sendJSON += JSON.stringify(thisMeasurement).substring(3, JSON.stringify(thisMeasurement).length);
+			*/
+			
+			var powerCalculation = +thisMeasurement.current * +thisMeasurement.voltage / 1000;
+			
+ 			 //var sendJSON = "\n{\n\t  \"power\": "+powerCalculation+',';
+			 var sendJSON = "\n{\n\t  \"power\": \""+powerCalculation+'\",';
+			// put in the JSON from the serial input next
 			sendJSON += dataIn.substring(3, dataIn.length);
+			
+		//	dataJSON = JSON.parse(dataIn);
+		//return dataJSON;
 		return sendJSON;
 }
 

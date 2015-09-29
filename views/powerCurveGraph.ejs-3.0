@@ -78,7 +78,7 @@
 				tickColor: "black",
 					includeZero: false,
 					minimum: 0,
-					maximum: 1000,
+					maximum: 600,
 					interval: 200
 				},
 				axisX:{
@@ -115,10 +115,10 @@
 			
 	
 		function handlePowerCurveData(dataInFromStream) {
-			// dataIn = addWindPitchCurrentToData(dataInFromStream);
-dataIn = dataInFromStream;
-				console.log("dataIn: "+dataIn);
-
+				// not needed now that measurements return this data
+				// dataIn = addWindPitchCurrentToData(dataInFromStream);
+				dataIn = dataInFromStream;
+				
 				// add the client based data to the data object
 				// dataIn = addWindPitchCurrentToData(dataInFromStream)
 					// save the new JSON data to a buffer
@@ -139,8 +139,8 @@ dataIn = dataInFromStream;
 				//	dataItem = JSON.parse(dataIn);
 					dataItem = computeMean(inData);
 						dataPoints.push({
-							x: +dataItem.rpm,
-							y: +dataItem.power,
+							x: dataItem.rpm,
+							y: dataItem.power,
 
 						});
 					if (dataPoints.length > limit)
@@ -164,19 +164,13 @@ dataIn = dataInFromStream;
 		function PCrecordDataFunction() {
 				// console.log('record button in Power Curve: ');
 				//	console.log("in RECORD inData size: "+inData.length);
-					dataMeaned = computeMean(inData);
-					
-					meanData.push( {
-						x: dataMeaned.rpm,
-						y: +dataMeaned.power
-					});
-					meanDataSeries.dataPoints = meanData;
+					meanDataData(inData);
 				//	console.log("in Record: meanDataPoint: "+meanData);
 						
 					outData.push(inData);
 																//	console.log("in RECORD outData : "+outData);
 
-					inData = [];
+				//	inData = [];
 							//	console.log("in RECORD inData size: "+outData.length);
 							//	console.log("in RECORD inData size: "+outData);
 
@@ -206,13 +200,13 @@ dataIn = dataInFromStream;
 			a.download = fileName;
 			a.href = url;
 			a.textContent = "Download data as JSON";
-			
+			meanDataSeries.dataPoints = meanData;
+
 			saveAs(blob,fileName);
-			meanData = [];
+		// meanData = [];
 			outData = [];
 			inData = [];
 			console.log("save data");
-meanDataSeries.dataPoints = meanData;
 		}
 		
 		
@@ -230,7 +224,6 @@ meanDataSeries.dataPoints = meanData;
 							sumRPM += thisDataItem.rpm;
 
 				};
-				
 				
 				var y = (sumPower / dataTomeanData.length);
 				var x = (sumRPM / dataTomeanData.length);
@@ -267,8 +260,8 @@ meanDataSeries.dataPoints = meanData;
 // console.log("meanData: data to mean: "+JSON.stringify(dataToMean[i]));
 					
 					thisMeanDataItem = JSON.parse(dataToMean[i]);
-							sumPower += +thisMeanDataItem.power;
-							sumRPM += +thisMeanDataItem.rpm;
+							sumPower += thisMeanDataItem.power;
+							sumRPM += thisMeanDataItem.rpm;
 
 				};
 				
