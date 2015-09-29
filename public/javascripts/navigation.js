@@ -8,10 +8,19 @@ $(document).ready(function() {
 			console.log(target.name);
 
 			switch(target.id) {
+				case "timeSpeedUp":
+					removeListenersForData();
+					window.parent.$("#rightFrame").empty();
+					window.parent.$("#rightFrame").load("./rightFrame/timeSpeedUp.html");
+					//window.parent.$("#rightFrame").load("./rightFrame/timeSpeedUpTest.html");
+					break;
+					
+					
 				case "topFrame":
 					removeListenersForData();
 					window.parent.$("#rightFrame").empty();
-					window.parent.$("#rightFrame").load("./rightFrame/introMain.html");
+					window.parent.$("#rightFrame.tourFrame").attr( "src", "./rightFrame/introMain.html");
+				//	window.parent.$("#rightFrame").load("./rightFrame/introMain.html");
 
 					break;
 				case "logoFrame":

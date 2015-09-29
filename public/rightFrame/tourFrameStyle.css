@@ -2,6 +2,8 @@ body {
 	font-family: Trebuchet, Arial, sans-serif;
 	
 }
+
+/*
 .oneDiv{
 	position: absolute;
 	top: 55px;
@@ -13,7 +15,6 @@ body {
 	top: 55px;
 	left: 15%;
 	width: 35%;
-	/*display: block;*/
 }
 .right2colDiv{
 	position: absolute;
@@ -40,7 +41,7 @@ body {
 	left: 1250px;
 	width: 500px;
 }
-
+*/
 /* Individual style settings
 --------------------------------------- */
 
@@ -57,6 +58,6 @@ body {
 }
 #swipe {
 	float: right;
-	width: 20%;
+	// width: 20%;
 	margin: 10px;
 }
