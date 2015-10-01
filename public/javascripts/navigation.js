@@ -11,7 +11,7 @@ $(document).ready(function() {
 				case "timeSpeedUp":
 					removeListenersForData();
 					window.parent.$("#rightFrame").empty();
-					window.parent.$("#rightFrame").load("./rightFrame/timeSpeedUp.html");
+					window.parent.$("#rightFrame").load("./timeSpeedUp.html");
 					//window.parent.$("#rightFrame").load("./rightFrame/timeSpeedUpTest.html");
 					break;
 					
@@ -26,7 +26,7 @@ $(document).ready(function() {
 				case "logoFrame":
 					removeListenersForData();
 					window.parent.$("#rightFrame").empty();
-					window.parent.$("#rightFrame").load("./rightFrame/index.html");
+					window.parent.$("#rightFrame").load("./rfIndex.html");
 
 					break;
 				case "powerCurveGraph":
